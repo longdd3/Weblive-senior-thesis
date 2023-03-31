@@ -68779,11 +68779,11 @@ var Sketch = /*#__PURE__*/function () {
         rotY: 0,
         rotZ: 0
       };
-      this.gui = new dat.GUI();
-      this.gui.add(this.settingss, "xU", -1, 1, 0.0001);
-      this.gui.add(this.settingss, "yU", -1, 1, 0.0001);
-      this.gui.add(this.settingss, "zU", -1, 1, 0.0001);
-      this.gui.add(this.settingss, "wU", -1, 1, 0.0001);
+      // this.gui = new dat.GUI();
+      // this.gui.add(this.settingss,"xU",-1,1,0.0001);
+      // this.gui.add(this.settingss,"yU",-1,1,0.0001);
+      // this.gui.add(this.settingss,"zU",-1,1,0.0001);
+      // this.gui.add(this.settingss,"wU",-1,1,0.0001);
 
       // that.gui.add(that.settings,"rotX",-1,1,0.001);
       // that.gui.add(that.settings,"rotY",-1,1,0.001);
