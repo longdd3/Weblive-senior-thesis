@@ -69544,15 +69544,26 @@ exports.default = Sketch;
 
 var _utils = require("./utils");
 var _cursor = require("./cursor");
+var _gsap = _interopRequireDefault(require("gsap"));
 var _app = _interopRequireDefault(require("./app"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // Preload images and fonts
 Promise.all([(0, _utils.preloadImages)('.js-image, .img, .poster-imgs, .bg-img')]).then(function () {
   // remove loader (loading class) 
+  console.log("page is fully loaded");
+  document.querySelector('body').classList.add('hideMyScroll');
+  var loadingscreen = document.querySelector(".loading-scene");
+  loadingscreen.classList.add('loading-screen--hide');
+  var tl = _gsap.default.timeline();
+  tl.add("start");
+  tl.to(loadingscreen, {
+    className: "loading-scene loading-screen--hide no-ld",
+    display: "none"
+  }, "start+=0.8");
   new _app.default({
     domElement: document.getElementById('container')
   });
 
   // initialize custom cursor
 });
-},{"./utils":"MgTz","./cursor":"LMRJ","./app":"QdeU"}]},{},["d6sW"], null)
+},{"./utils":"MgTz","./cursor":"LMRJ","gsap":"TpQl","./app":"QdeU"}]},{},["d6sW"], null)

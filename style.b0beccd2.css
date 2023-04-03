@@ -1127,7 +1127,7 @@ path.fill-green {
 }
 [class*=" i-"], [class^=i-] {
     font-family: i!important;
-    speak: never;
+ 
     font-style: normal;
     font-weight: 400;
     -webkit-font-feature-settings: normal;

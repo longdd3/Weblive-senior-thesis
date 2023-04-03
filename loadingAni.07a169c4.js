@@ -6111,15 +6111,4 @@ function loadingAni() {
 }
 loadingscreen.classList.remove('no-stuff');
 loadingAni();
-window.onload = setInterval(function (e) {
-  console.log("page is fully loaded");
-  document.querySelector('body').classList.add('hideMyScroll');
-  loadingscreen.classList.add('loading-screen--hide');
-  var tl = _gsap.default.timeline();
-  tl.add("start");
-  tl.to(loadingscreen, {
-    className: "loading-scene loading-screen--hide no-ld",
-    display: "none"
-  }, "start+=0.8");
-}, 8000);
 },{"splitting/dist/splitting.css":"oR66","splitting/dist/splitting-cells.css":"oR66","splitting":"Qdhu","gsap":"TpQl"}]},{},["lhjB"], null)
