@@ -1575,6 +1575,62 @@ path.fill-green {
     border-radius: 7.5px;
     background-color: var(--color-bgr);
  }
+/* poster images  */
+ .section-poster {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+ }
+ 
+.poster-scroll-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+   
+    
+}
+.poster-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+}
+.poster-item img{
+    width: 400px;
+  
+    overflow: hidden;
+    position: absolute;
+}
+.posPoster {
+    position: absolute;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    
+}
+.ppost1 {
+    margin-left: 52px;
+    margin-top: 22px;
+
+}
+.ppost2 {
+    margin-left: -52px;
+    margin-top: 22px;
+
+}
+.ppost3 {
+    margin-left: 52px;
+    margin-top: 42px;
+
+}
+
  /* morph svg   */
  .cartoon{
  

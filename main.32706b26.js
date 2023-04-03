@@ -51097,10 +51097,18 @@ var MapControls = /*#__PURE__*/function (_OrbitControls) {
   return _createClass(MapControls);
 }(OrbitControls);
 exports.MapControls = MapControls;
-},{"three":"dKqR"}],"Oth3":[function(require,module,exports) {
-module.exports = "#define GLSLIFY 1\nuniform float time;\nuniform float uProgress;\nuniform sampler2D uTexture;\nuniform vec2 uTextureSize; \nvarying vec2 vUv; \nvarying vec2 vSize; \nuniform vec4 resolution;\nvec2 getUV(vec2 uv, vec2 textureSize, vec2 quadSize) {\n     vec2 tempUV = uv - vec2(0.5);\n     float quadAspect = quadSize.x / quadSize.y;\n     float texturedAspect = textureSize.x / textureSize.y;\n     if(quadAspect < texturedAspect)\n     {\n            tempUV = tempUV *vec2(quadAspect / texturedAspect,1.);\n     }\n     else {\n            tempUV = tempUV *vec2(1.,texturedAspect / quadAspect);    \n     }\n     tempUV += vec2(0.5);\n     return tempUV;\n}\n\nvoid main () {\n    vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);\n    // vec2 newUV = vUv*2.;\n\n    vec2 correctUV = getUV(newUV, uTextureSize, vSize);\n    vec4 image = texture(uTexture, correctUV);\n    gl_FragColor = vec4(vUv, 0., 1.);\n    gl_FragColor = image;\n \n}\n ";
+},{"three":"dKqR"}],"fu7U":[function(require,module,exports) {
+module.exports = "brush.1ed39af1.png";
+},{}],"PVeb":[function(require,module,exports) {
+module.exports = "testobject.4c170138.jpg";
+},{}],"Oth3":[function(require,module,exports) {
+module.exports = "#define GLSLIFY 1\nuniform float time;\nuniform float time2;\nuniform float uProgress;\n\nuniform sampler2D uTexture;\nuniform sampler2D uDisplacement;\nuniform vec2 uTextureSize;  \nvarying vec2 vUv; \nvarying vec2 vSize; \nuniform vec4 resolution;\nfloat PI = 3.1415926535897932384626433832795;\nvec2 getUV(vec2 uv, vec2 textureSize, vec2 quadSize) {\n     vec2 tempUV = uv - vec2(0.5);\n     float quadAspect = quadSize.x / quadSize.y;\n     float texturedAspect = textureSize.x / textureSize.y;\n     if(quadAspect < texturedAspect)\n     {\n            tempUV = tempUV *vec2(quadAspect / texturedAspect,1.);\n     }\n     else {\n            tempUV = tempUV *vec2(1.,texturedAspect / quadAspect);    \n     }\n     tempUV += vec2(0.5);\n     return tempUV;\n}\nfloat rand(vec2 c){\n\treturn fract(sin(dot(c.xy ,vec2(12.9898,78.233))) * 43758.5453);\n}\n\n \nvoid main () {\n       \n    vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);\n    // vec2 newUV = vUv*2.;\n    \n    vec4 displacement = texture2D(uDisplacement, vUv);\n       \n    float theta = displacement.r * 2.*PI;\n    vec2 dir =vec2(sin(theta), cos(theta));\n    vec2 uv = vUv + dir*displacement.r* 0.5;\n\n    vec2 correctUV = getUV( newUV, uTextureSize, vSize );\n\n    vec4 image = texture2D(uTexture, correctUV);\n       \n    gl_FragColor = vec4(vUv, 0., 1.);\n    gl_FragColor = image;\n \n}\n ";
+},{}],"NJ8k":[function(require,module,exports) {
+module.exports = "#define GLSLIFY 1\n uniform float time;\nuniform float progress;\nuniform sampler2D uTexture;\nuniform sampler2D uDisplacement;\nuniform vec4 resolution;\nvarying vec2 vUv;\nvarying vec3 vPosition;\nfloat PI = 3.141592653589793238;\nvoid main()\n{\nvec4 displacement = texture2D(uDisplacement, vUv);\nfloat theta = displacement.r*2.*PI;\nvec2 dirc = vec2(sin(theta), cos(theta));\nvec2 uv = vUv + dirc*displacement.r*0.1;\nvec4 color = texture2D(uTexture, uv);\ngl_FragColor = color;\n}";
 },{}],"dpJa":[function(require,module,exports) {
-module.exports = "#define GLSLIFY 1\nuniform float time;\nuniform float time2;\nuniform float time3;\nuniform float uProgress;\n uniform vec2 uResolution;\n uniform vec2 uQuadSize;\n uniform vec4 uCorners;\n //\tSimplex 4D Noise \n//\tby Ian McEwan, Ashima Arts\n//\n\nvarying vec2 vUv; \nvarying vec2 vSize; \n vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}\nfloat permute(float x){return floor(mod(((x*34.0)+1.0)*x, 289.0));}\nvec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}\nfloat taylorInvSqrt(float r){return 1.79284291400159 - 0.85373472095314 * r;}\n\nvec4 grad4(float j, vec4 ip){\n  const vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);\n  vec4 p,s;\n\n  p.xyz = floor( fract (vec3(j) * ip.xyz) * 7.0) * ip.z - 1.0;\n  p.w = 1.5 - dot(abs(p.xyz), ones.xyz);\n  s = vec4(lessThan(p, vec4(0.0)));\n  p.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www; \n\n  return p;\n}\n\nfloat snoise(vec4 v){\n  const vec2  C = vec2( 0.138196601125010504,  // (5 - sqrt(5))/20  G4\n                        0.309016994374947451); // (sqrt(5) - 1)/4   F4\n// First corner\n  vec4 i  = floor(v + dot(v, C.yyyy) );\n  vec4 x0 = v -   i + dot(i, C.xxxx);\n\n// Other corners\n\n// Rank sorting originally contributed by Bill Licea-Kane, AMD (formerly ATI)\n  vec4 i0;\n\n  vec3 isX = step( x0.yzw, x0.xxx );\n  vec3 isYZ = step( x0.zww, x0.yyz );\n//  i0.x = dot( isX, vec3( 1.0 ) );\n  i0.x = isX.x + isX.y + isX.z;\n  i0.yzw = 1.0 - isX;\n\n//  i0.y += dot( isYZ.xy, vec2( 1.0 ) );\n  i0.y += isYZ.x + isYZ.y;\n  i0.zw += 1.0 - isYZ.xy;\n\n  i0.z += isYZ.z;\n  i0.w += 1.0 - isYZ.z;\n\n  // i0 now contains the unique values 0,1,2,3 in each channel\n  vec4 i3 = clamp( i0, 0.0, 1.0 );\n  vec4 i2 = clamp( i0-1.0, 0.0, 1.0 );\n  vec4 i1 = clamp( i0-2.0, 0.0, 1.0 );\n\n  //  x0 = x0 - 0.0 + 0.0 * C \n  vec4 x1 = x0 - i1 + 1.0 * C.xxxx;\n  vec4 x2 = x0 - i2 + 2.0 * C.xxxx;\n  vec4 x3 = x0 - i3 + 3.0 * C.xxxx;\n  vec4 x4 = x0 - 1.0 + 4.0 * C.xxxx;\n\n// Permutations\n  i = mod(i, 289.0); \n  float j0 = permute( permute( permute( permute(i.w) + i.z) + i.y) + i.x);\n  vec4 j1 = permute( permute( permute( permute (\n             i.w + vec4(i1.w, i2.w, i3.w, 1.0 ))\n           + i.z + vec4(i1.z, i2.z, i3.z, 1.0 ))\n           + i.y + vec4(i1.y, i2.y, i3.y, 1.0 ))\n           + i.x + vec4(i1.x, i2.x, i3.x, 1.0 ));\n// Gradients\n// ( 7*7*6 points uniformly over a cube, mapped onto a 4-octahedron.)\n// 7*7*6 = 294, which is close to the ring size 17*17 = 289.\n\n  vec4 ip = vec4(1.0/294.0, 1.0/49.0, 1.0/7.0, 0.0) ;\n\n  vec4 p0 = grad4(j0,   ip);\n  vec4 p1 = grad4(j1.x, ip);\n  vec4 p2 = grad4(j1.y, ip);\n  vec4 p3 = grad4(j1.z, ip);\n  vec4 p4 = grad4(j1.w, ip);\n\n// Normalise gradients\n  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n  p0 *= norm.x;\n  p1 *= norm.y;\n  p2 *= norm.z;\n  p3 *= norm.w;\n  p4 *= taylorInvSqrt(dot(p4,p4));\n\n// Mix contributions from the five corners\n  vec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);\n  vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);\n  m0 = m0 * m0;\n  m1 = m1 * m1;\n  return 49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))\n               + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;\n\n}\n void main (){\n float PI = 3.1415926;\n    vUv = (uv - vec2(0.5))*0.9 + vec2(0.5);\n  \n    vec3 pos = position;\n    \n    pos.z = (sin(pos.x * 12.0 + time) * 1.5 + sin(pos.y * 3.0 + time) * 1.5) * (0.1 + 12.0 * 0.5);\n\n    float sine = 1. - sin(PI*uProgress);\n\n      float noise = snoise(vec4(uv.x, uv.y, 2., time*0.01));\n    float waves = sine*sin(5.*length(uv) + 5. *uProgress);\n    vec4 defaultState = modelMatrix * vec4(pos, 1.0);\n    vec4 fullScreenState = vec4(pos, 1.);\n    fullScreenState.x *= uResolution.x ;\n    fullScreenState.y *= uResolution.y;\n      fullScreenState.z +=uCorners.x;\n    // fullScreenState.z += uCorners.z;\n       float cornersProgress = mix(\n        mix(uCorners.z,uCorners.w,uv.x),\n        mix(uCorners.x,uCorners.y,uv.x),\n        uv.y\n    );\n       vec4 finalState = mix(defaultState,fullScreenState, cornersProgress);\n\n    vSize = mix(uQuadSize,uResolution,cornersProgress*noise);\n\n    gl_Position = projectionMatrix * viewMatrix * finalState ;\n}";
+module.exports = "#define GLSLIFY 1\nuniform float time;\nuniform float time2;\nuniform float time3;\nuniform float uProgress;\n uniform vec2 uResolution;\n uniform vec2 uQuadSize;\n uniform vec4 uCorners;\n //\tSimplex 4D Noise \n//\tby Ian McEwan, Ashima Arts\n//\n\nvarying vec2 vUv; \nvarying vec2 vSize; \n vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}\nfloat permute(float x){return floor(mod(((x*34.0)+1.0)*x, 289.0));}\nvec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}\nfloat taylorInvSqrt(float r){return 1.79284291400159 - 0.85373472095314 * r;}\n\nvec4 grad4(float j, vec4 ip){\n  const vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);\n  vec4 p,s;\n\n  p.xyz = floor( fract (vec3(j) * ip.xyz) * 7.0) * ip.z - 1.0;\n  p.w = 1.5 - dot(abs(p.xyz), ones.xyz);\n  s = vec4(lessThan(p, vec4(0.0)));\n  p.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www; \n\n  return p;\n}\n\nfloat snoise(vec4 v){\n  const vec2  C = vec2( 0.138196601125010504,  // (5 - sqrt(5))/20  G4\n                        0.309016994374947451); // (sqrt(5) - 1)/4   F4\n// First corner\n  vec4 i  = floor(v + dot(v, C.yyyy) );\n  vec4 x0 = v -   i + dot(i, C.xxxx);\n\n// Other corners\n\n// Rank sorting originally contributed by Bill Licea-Kane, AMD (formerly ATI)\n  vec4 i0;\n\n  vec3 isX = step( x0.yzw, x0.xxx );\n  vec3 isYZ = step( x0.zww, x0.yyz );\n//  i0.x = dot( isX, vec3( 1.0 ) );\n  i0.x = isX.x + isX.y + isX.z;\n  i0.yzw = 1.0 - isX;\n\n//  i0.y += dot( isYZ.xy, vec2( 1.0 ) );\n  i0.y += isYZ.x + isYZ.y;\n  i0.zw += 1.0 - isYZ.xy;\n\n  i0.z += isYZ.z;\n  i0.w += 1.0 - isYZ.z;\n\n  // i0 now contains the unique values 0,1,2,3 in each channel\n  vec4 i3 = clamp( i0, 0.0, 1.0 );\n  vec4 i2 = clamp( i0-1.0, 0.0, 1.0 );\n  vec4 i1 = clamp( i0-2.0, 0.0, 1.0 );\n\n  //  x0 = x0 - 0.0 + 0.0 * C \n  vec4 x1 = x0 - i1 + 1.0 * C.xxxx;\n  vec4 x2 = x0 - i2 + 2.0 * C.xxxx;\n  vec4 x3 = x0 - i3 + 3.0 * C.xxxx;\n  vec4 x4 = x0 - 1.0 + 4.0 * C.xxxx;\n\n// Permutations\n  i = mod(i, 289.0); \n  float j0 = permute( permute( permute( permute(i.w) + i.z) + i.y) + i.x);\n  vec4 j1 = permute( permute( permute( permute (\n             i.w + vec4(i1.w, i2.w, i3.w, 1.0 ))\n           + i.z + vec4(i1.z, i2.z, i3.z, 1.0 ))\n           + i.y + vec4(i1.y, i2.y, i3.y, 1.0 ))\n           + i.x + vec4(i1.x, i2.x, i3.x, 1.0 ));\n// Gradients\n// ( 7*7*6 points uniformly over a cube, mapped onto a 4-octahedron.)\n// 7*7*6 = 294, which is close to the ring size 17*17 = 289.\n\n  vec4 ip = vec4(1.0/294.0, 1.0/49.0, 1.0/7.0, 0.0) ;\n\n  vec4 p0 = grad4(j0,   ip);\n  vec4 p1 = grad4(j1.x, ip);\n  vec4 p2 = grad4(j1.y, ip);\n  vec4 p3 = grad4(j1.z, ip);\n  vec4 p4 = grad4(j1.w, ip);\n\n// Normalise gradients\n  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n  p0 *= norm.x;\n  p1 *= norm.y;\n  p2 *= norm.z;\n  p3 *= norm.w;\n  p4 *= taylorInvSqrt(dot(p4,p4));\n\n// Mix contributions from the five corners\n  vec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);\n  vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);\n  m0 = m0 * m0;\n  m1 = m1 * m1;\n  return 49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))\n               + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;\n\n}\n void main (){\n float PI = 3.1415926;\n    vUv = (uv - vec2(0.5))*0.9+ vec2(0.5);\n  \n    vec3 pos = position;\n    \n    pos.z = (sin(pos.x * 12.0 + time) * 1.5 + sin(pos.y * 3.0 + time) * 1.5) * (0.1 + 12.0 * 0.5) * time2;;\n \n    float sine = 1. - sin(PI*uProgress);\n\n      float noise = snoise(vec4(uv.x, uv.y, 2., time*0.01));\n    float waves = sine*sin(5.*length(uv) + 5. *uProgress);\n    vec4 defaultState = modelMatrix * vec4(pos, 1.0);\n    vec4 fullScreenState = vec4(pos, 1.);\n    fullScreenState.x *= uResolution.x ;\n    fullScreenState.y *= uResolution.y;\n      fullScreenState.z +=uCorners.x;\n    // fullScreenState.z += uCorners.z;\n       float cornersProgress = mix(\n        mix(uCorners.z,uCorners.w,uv.x),\n        mix(uCorners.x,uCorners.y,uv.x),\n        uv.y\n    );\n       vec4 finalState = mix(defaultState,fullScreenState, cornersProgress);\n\n    vSize = mix(uQuadSize,uResolution,cornersProgress*noise);\n\n    gl_Position = projectionMatrix * viewMatrix * finalState ;\n}";
+},{}],"EGRB":[function(require,module,exports) {
+module.exports = "#define GLSLIFY 1\nuniform float time;\nvarying vec2 vUv;\nvarying vec3 vPosition;\nuniform vec2 pixels;\nfloat PI = 3.141592653589793238;\nvoid main() {\n  vUv = uv;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}";
 },{}],"TgBc":[function(require,module,exports) {
 "use strict";
 
@@ -68123,8 +68131,12 @@ var THREE = _interopRequireWildcard(require("three"));
 var _smoothScrollbar = _interopRequireDefault(require("smooth-scrollbar"));
 var _asscroll = _interopRequireDefault(require("@ashthornton/asscroll"));
 var _OrbitControls = require("three/examples/jsm/controls/OrbitControls.js");
+var _brush = _interopRequireDefault(require("../img/brush.png"));
+var _testobject = _interopRequireDefault(require("../img/testobject.jpg"));
 var _fragment = _interopRequireDefault(require("../shader/fragment.glsl"));
+var _fragmentsl = _interopRequireDefault(require("../shader/fragmentsl.glsl"));
 var _vertex = _interopRequireDefault(require("../shader/vertex.glsl"));
+var _vertexsl = _interopRequireDefault(require("../shader/vertexsl.glsl"));
 var _EffectComposer = require("three/examples/jsm/postprocessing/EffectComposer.js");
 var _RenderPass = require("three/examples/jsm/postprocessing/RenderPass.js");
 var _ShaderPass = require("three/examples/jsm/postprocessing/ShaderPass.js");
@@ -68156,12 +68168,18 @@ var Sketch = /*#__PURE__*/function () {
   function Sketch(options) {
     _classCallCheck(this, Sketch);
     this.scene = new THREE.Scene();
+    this.scene2 = new THREE.Scene();
     this.container = options.domElement;
     this.width = this.container.offsetWidth;
     this.height = this.container.offsetHeight;
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true
+    });
+    this.baseTexture = new THREE.WebGL3DRenderTarget(this.width, this.height, {
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBAFormat
     });
     // this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -68179,15 +68197,18 @@ var Sketch = /*#__PURE__*/function () {
     // mouse effects on all links and others
 
     // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    var frustumSize = this.height;
+    var aspect = this.width / this.height;
+    // this.camera = new THREE.OrthographicCamera(frustumSize * aspect/ -2,frustumSize * aspect/2, frustumSize/2, frustumSize /-2, -1000, 1000);
+
     this.camera.position.set(0, 0, 700);
     this.raycaster = new THREE.Raycaster();
     this.imagesAdded = 0;
+    this.currentWave = 0;
     this.materials = [];
     this.imageStore = [];
-    this.mouse = {
-      x: 0,
-      y: 0
-    };
+    this.mouse = new THREE.Vector2(0, 0);
+    this.preMouse = new THREE.Vector2(0, 0);
     this.groups = [];
     this.isRunning = true;
     this.asscroll = new _asscroll.default({
@@ -68206,10 +68227,13 @@ var Sketch = /*#__PURE__*/function () {
     // this.asscroll.currentPos = 5409;
     // console.log(this.controls)
     this.time = 0;
+    // this.mouseEvents();
+
     this.addCursor();
     this.setupSettings();
     this.addObjects();
-    // this.mouseMove(); 
+    //  this.addRibble();
+
     this.addPost();
     this.beginAnimations();
     this.addClickEvents();
@@ -68289,7 +68313,7 @@ var Sketch = /*#__PURE__*/function () {
     key: "addPost",
     value: function addPost() {
       this.composer = new _EffectComposer.EffectComposer(this.renderer);
-      this.composer.addPass(new _RenderPass.RenderPass(this.scene, this.camera));
+      this.composer.addPass(new _RenderPass.RenderPass(this.scene2, this.camera));
       this.customPass = new _ShaderPass.ShaderPass(_postprocessing.PostProcessing);
       this.customPass.uniforms["resolution"].value = new THREE.Vector2(window.innerWidth, window.innerHeight);
       this.customPass.uniforms["resolution"].value.multiplyScalar(window.devicePixelRatio);
@@ -68343,7 +68367,7 @@ var Sketch = /*#__PURE__*/function () {
       var tlTrigger3 = _gsap.default.timeline({
         scrollTrigger: {
           trigger: th.pageFooter,
-          start: "20px 30%",
+          start: "-200px top",
           end: function end() {
             return "+=" + th.pageFooter.offsetWidth;
           },
@@ -68467,6 +68491,7 @@ var Sketch = /*#__PURE__*/function () {
       th.beginAnimations();
       th.addClickEvents();
       //landscape Button
+
       th.planet = bds.querySelector('.planet');
       th.planetOut = bds.querySelector('.floating-icons-inner.planetOut');
       th.planetOut.classList.remove('no-icon');
@@ -68493,6 +68518,22 @@ var Sketch = /*#__PURE__*/function () {
       th.planet.addEventListener('mouseout', function () {
         tlplanet.reverse();
       });
+      th.imageStore.forEach(function (i, e) {
+        // console.log(i.mesh)
+        i.img.addEventListener('mouseover', function () {
+          _gsap.default.to(i.mesh.material.uniforms.time2, {
+            value: 5,
+            duration: 0.5
+          });
+        });
+        i.img.addEventListener('mouseout', function () {
+          _gsap.default.to(i.mesh.material.uniforms.time2, {
+            value: 1,
+            duration: 0.5
+          });
+        });
+      });
+
       //space Button
 
       th.spaceBtn = bds.querySelector('.space');
@@ -68664,6 +68705,42 @@ var Sketch = /*#__PURE__*/function () {
       th.sbcFI = bds.querySelector('[data-sbcFI]');
       th.sbc = bds.querySelector(".section-bg-clip");
       th.scrollup = bds.querySelector(".scroll-top");
+
+      // th.posterSection = bds.querySelector(".poster-triggers");
+      // th.posterSection2 = bds.querySelector(".section-poster");
+      // th.ppost1 = bds.querySelector('.ppost1');
+      // th.ppost2 = bds.querySelector('.ppost2');
+      // th.ppost3 = bds.querySelector('.ppost3');
+      // th.ppost4 = bds.querySelector('.ppost4');
+
+      // ScrollTrigger.matchMedia({
+      //   "(min-width: 1024px)": function () {
+      //     let tlscrollSS = gsap.timeline(
+      //       {
+      //         scrollTrigger: {
+      //           trigger: th.posterSection2,
+      //           start: "top top",
+      //           end: "200%",
+      //           markers: true,
+      //           scrub: 1,
+      //           pin: true,
+      //           toggleActions: "restart pause pasue reverse",
+
+      //         },
+      //       }
+      //     );
+      //     tlscrollSS.from([th.ppost2, th.ppost3, th.ppost4], {
+
+      //       stagger:0.1,
+      //       xPercent: 350, 
+      //       transformOrigin: "0% 50%",
+      //       duration: 4,
+      //       rotation: 42,
+      //     });
+
+      //   }
+      // })
+
       var tl = _gsap.default.timeline();
       tl.add("start");
       tl.to([th.anFI, th.anNE], {
@@ -68763,6 +68840,37 @@ var Sketch = /*#__PURE__*/function () {
       }, "start");
     }
   }, {
+    key: "mouseEvents",
+    value: function mouseEvents() {
+      var _this2 = this;
+      window.addEventListener("mousemove", function (e) {
+        _this2.mouse.x = e.clientX - _this2.width / 2;
+        _this2.mouse.y = _this2.height / 2 - e.clientY;
+      });
+    }
+  }, {
+    key: "addRibble",
+    value: function addRibble() {
+      var that = this;
+      this.geometryRibbe = new THREE.PlaneGeometry(50, 50, 100, 100);
+      this.meshes = [];
+      this.max = 50;
+      for (var i = 0; i < this.max; i++) {
+        var m = new THREE.MeshBasicMaterial({
+          transparent: true,
+          map: new THREE.TextureLoader().load(_brush.default),
+          blending: THREE.AdditiveBlending,
+          depthTest: false,
+          depthWrite: false
+        });
+        var mesh = new THREE.Mesh(this.geometryRibbe, m);
+        mesh.visible = false;
+        mesh.rotation.z = 2 * Math.PI * Math.random();
+        this.scene2.add(mesh);
+        this.meshes.push(mesh);
+      }
+    }
+  }, {
     key: "setupSettings",
     value: function setupSettings() {
       var that = this;
@@ -68777,17 +68885,20 @@ var Sketch = /*#__PURE__*/function () {
         // wU: 0,
         rotX: 0,
         rotY: 0,
-        rotZ: 0
+        rotZ: 0,
+        mt: 1.0,
+        md: 1.0
       };
       // this.gui = new dat.GUI();
       // this.gui.add(this.settingss,"xU",-1,1,0.0001);
       // this.gui.add(this.settingss,"yU",-1,1,0.0001);
       // this.gui.add(this.settingss,"zU",-1,1,0.0001);
       // this.gui.add(this.settingss,"wU",-1,1,0.0001);
+      // this.gui.add(this.settingss,"mt",-1,15,0.0001);
 
-      // that.gui.add(that.settings,"rotX",-1,1,0.001);
-      // that.gui.add(that.settings,"rotY",-1,1,0.001);
-      // that.gui.add(that.settings,"rotZ",-1,1,0.001);
+      // that.gui.add(this.settingss,"rotX",-1,1,0.001);
+      // that.gui.add(this.settingss,"rotY",-1,1,0.001);
+      // that.gui.add(this.settingss,"rotZ",-1,1,0.001);
     }
   }, {
     key: "mouseMove",
@@ -68868,11 +68979,11 @@ var Sketch = /*#__PURE__*/function () {
   }, {
     key: "addClickEvents",
     value: function addClickEvents() {
-      var _this2 = this;
+      var _this3 = this;
       this.imageStore.forEach(function (i, e) {
         // console.log(i.mesh)
         i.img.addEventListener('click', function () {
-          _this2.hideHeader(_this2);
+          _this3.hideHeader(_this3);
           var tl = _gsap.default.timeline({}).to(i.mesh.material.uniforms.uCorners.value, {
             x: 1,
             duration: 0.4
@@ -69189,7 +69300,7 @@ var Sketch = /*#__PURE__*/function () {
   }, {
     key: "resize",
     value: function resize() {
-      var _this3 = this;
+      var _this4 = this;
       this.width = this.container.offsetWidth;
       this.height = this.container.offsetHeight;
       this.renderer.setSize(this.width, this.height);
@@ -69216,8 +69327,8 @@ var Sketch = /*#__PURE__*/function () {
       // this.mesh.material.uniforms.uResolution.value.y = this.height;
 
       this.materials.forEach(function (m) {
-        m.uniforms.uResolution.value.x = _this3.width;
-        m.uniforms.uResolution.value.y = _this3.height;
+        m.uniforms.uResolution.value.x = _this4.width;
+        m.uniforms.uResolution.value.y = _this4.height;
         m.uniforms.resolution.value.z = a1;
         m.uniforms.resolution.value.w = a2;
       });
@@ -69227,7 +69338,7 @@ var Sketch = /*#__PURE__*/function () {
         var bounds = i.img.getBoundingClientRect();
         i.mesh.scale.set(bounds.width, bounds.height, 1);
         i.top = bounds.top;
-        i.left = bounds.left + _this3.asscroll.currentPos;
+        i.left = bounds.left + _this4.asscroll.currentPos;
         i.width = bounds.width;
         i.height = bounds.height;
         i.mesh.material.uniforms.uQuadSize.value.x = bounds.width;
@@ -69246,17 +69357,24 @@ var Sketch = /*#__PURE__*/function () {
   }, {
     key: "addObjects",
     value: function addObjects() {
-      var _this4 = this;
+      var _this5 = this;
       this.geometry = new THREE.PlaneGeometry(1, 1, 100, 100);
       this.material = new THREE.ShaderMaterial({
+        extensions: {
+          derivatives: '#extension GL_OES_standard_derivatives : enable'
+        },
+        side: THREE.DoubleSide,
         uniforms: {
           time: {
             value: 1.0
           },
           time2: {
-            value: null
+            value: 1.0
           },
           time3: {
+            value: null
+          },
+          uDisplacement: {
             value: null
           },
           uProgress: {
@@ -69291,8 +69409,8 @@ var Sketch = /*#__PURE__*/function () {
         },
 
         // wireframe: true,
-        depthWrite: false,
-        transparent: true,
+        // depthTest: false,
+        // depthWrite: false,
         vertexShader: _vertex.default,
         fragmentShader: _fragment.default
       });
@@ -69306,16 +69424,16 @@ var Sketch = /*#__PURE__*/function () {
       this.images = _toConsumableArray(document.querySelectorAll('.js-image'));
       this.imageStore = this.images.map(function (img) {
         var bounds = img.getBoundingClientRect();
-        var m = _this4.material.clone();
-        _this4.materials.push(m);
+        var m = _this5.material.clone();
+        _this5.materials.push(m);
         var group = new THREE.Group();
         var image = new Image();
         image.src = img.src;
         var texture = new THREE.Texture(image);
         texture.needsUpdate = true;
         m.uniforms.uTexture.value = texture;
-        var mesh = new THREE.Mesh(_this4.geometry, m);
-        _this4.scene.add(mesh);
+        var mesh = new THREE.Mesh(_this5.geometry, m);
+        _this5.scene.add(mesh);
         mesh.scale.set(bounds.width, bounds.height, 1);
         return {
           img: img,
@@ -69339,34 +69457,89 @@ var Sketch = /*#__PURE__*/function () {
         });
       }
     }
+    //   setnewWave(x, y, index) {
+    //     let m  = this.meshes[index];
+    //     m.visible = true;
+    //     m.position.x = x;
+    //     m.position.y = y;
+    //     m.scale.x = m.scale.y =0.2;
+    //     m.material.opacity = 0.5
+
+    // }
+    // trackMousePos() {
+    //   if(Math.abs(this.mouse.x - this.preMouse.x ) <4 || 
+    //     Math.abs(this.mouse.y - this.preMouse.y ) <4)
+    //     {
+
+    //   } else {
+    //     this.setnewWave(this.mouse.x, this.mouse.y, this.currentWave);
+    //     this.currentWave = (this.currentWave + 1 )%this.max;
+    //   }
+    //   this.preMouse.x = this.mouse.x;
+    //   this.preMouse.y = this.mouse.y;
+    // }
   }, {
     key: "render",
     value: function render() {
       var that = this;
+      // this.trackMousePos();
       this.time += 0.05;
       this.customPass.uniforms.time.value = this.time;
-      if (this.material) {
-        this.materials.forEach(function (m) {
-          m.uniforms.time.value = that.time;
-
-          // m.uniforms.uCorners.value.x = this.settings.xU;         
-          // m.uniforms.uCorners.value.y = this.settings.yU;         
-          // m.uniforms.uCorners.value.z = this.settings.zU;         
-          // m.uniforms.uCorners.value.w = this.settings.wU;              
-        });
-      }
-
       this.asscroll.update();
       this.setPosition();
       requestAnimationFrame(this.render.bind(this));
+      // this.renderer.setRenderTarget(this.baseTexture);
+      // this.renderer.render(this.scene2, this.camera);
+
+      this.materials.forEach(function (m) {
+        m.uniforms.time.value = that.time;
+        // m.uniforms.time2.value = that.settingss.mt;
+        // m.uniforms.uDisplacement.value = that.baseTexture;
+      });
+
+      // this.renderer.setRenderTarget(null);
+      // this.renderer.clear();
       this.renderer.render(this.scene, this.camera);
+      // this.renderer.render(this.scene2, this.camera);
+
+      // this.renderer.setRenderTarget(this.baseTexture);
+      // this.material.uniforms.uDisplacement.value = that.baseTexture;
+      //  this.renderer.setRenderTarget(null);
+      //  if (this.material) {
+      //   this.materials.forEach(function (m) {
+      //     m.uniforms.time.value = that.time;
+      //     // m.uniforms.time2.value = that.settingss.mt;
+
+      //     m.uniforms.uDisplacement.value = that.baseTexture;
+
+      //   });
+      // }
+
+      // this.renderer.clear();
+
+      // this.renderer.render(this.scene, this.camera);
+
+      // this.meshes.forEach(m => {  
+      //   if(m.visible) {
+      //     m.rotation.z += 0.02;
+      //     m.material.opacity *= 0.96;
+      //     m.scale.x = 0.98*m.scale.x + 0.1;
+
+      //     m.scale.y = m.scale.x;
+      //     if(m.material.opacity < 0.02) {
+      //       m.visible = false;
+      //     }
+      //   }
+      //   //  m.position.x = this.mouse.x;
+      //   //   m.position.y = this.mouse.y;
+      // })
       // this.composer.render();
     }
   }]);
   return Sketch;
 }();
 exports.default = Sketch;
-},{"three":"dKqR","smooth-scrollbar":"fFeg","@ashthornton/asscroll":"B3oH","three/examples/jsm/controls/OrbitControls.js":"xTGv","../shader/fragment.glsl":"Oth3","../shader/vertex.glsl":"dpJa","three/examples/jsm/postprocessing/EffectComposer.js":"Dhc5","three/examples/jsm/postprocessing/RenderPass.js":"YcOQ","three/examples/jsm/postprocessing/ShaderPass.js":"cYXC","./postprocessing":"n7d1","./cursor":"LMRJ","dat.gui":"KkZG","gsap":"TpQl","@barba/core":"nGBO","./randomvl":"qb4e","jquery":"juYr","gsap/ScrollTrigger":"TgBN"}],"d6sW":[function(require,module,exports) {
+},{"three":"dKqR","smooth-scrollbar":"fFeg","@ashthornton/asscroll":"B3oH","three/examples/jsm/controls/OrbitControls.js":"xTGv","../img/brush.png":"fu7U","../img/testobject.jpg":"PVeb","../shader/fragment.glsl":"Oth3","../shader/fragmentsl.glsl":"NJ8k","../shader/vertex.glsl":"dpJa","../shader/vertexsl.glsl":"EGRB","three/examples/jsm/postprocessing/EffectComposer.js":"Dhc5","three/examples/jsm/postprocessing/RenderPass.js":"YcOQ","three/examples/jsm/postprocessing/ShaderPass.js":"cYXC","./postprocessing":"n7d1","./cursor":"LMRJ","dat.gui":"KkZG","gsap":"TpQl","@barba/core":"nGBO","./randomvl":"qb4e","jquery":"juYr","gsap/ScrollTrigger":"TgBN"}],"d6sW":[function(require,module,exports) {
 "use strict";
 
 var _utils = require("./utils");
