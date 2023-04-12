@@ -117,9 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"oR66":[function(require,module,exports) {
-
-},{}],"Qdhu":[function(require,module,exports) {
+})({"Qdhu":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 (function (global, factory) {
@@ -6020,9 +6018,7 @@ exports.default = exports.gsap = gsapWithCSS;
 },{"./gsap-core.js":"TNS6","./CSSPlugin.js":"bp4Z"}],"lhjB":[function(require,module,exports) {
 "use strict";
 
-require("splitting/dist/splitting.css");
-require("splitting/dist/splitting-cells.css");
-var _splitting2 = _interopRequireDefault(require("splitting"));
+var _splitting = _interopRequireDefault(require("splitting"));
 var _gsap = _interopRequireDefault(require("gsap"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
@@ -6032,7 +6028,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-(0, _splitting2.default)();
+(0, _splitting.default)();
 var splitinntexts = document.querySelectorAll(".content__title[data-splitting][data-effect]");
 var loadingscreen = document.querySelector(".loading-scene");
 function loadingAni() {
@@ -6041,7 +6037,7 @@ function loadingAni() {
     var _iterator = _createForOfIteratorHelper(words),
       _step;
     try {
-      var _loop = function _loop() {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var word = _step.value;
         var chars = word.querySelectorAll('.char');
         var charsTotal = chars.length;
@@ -6050,7 +6046,7 @@ function loadingAni() {
             perspective: 4000
           });
         });
-        tl = _gsap.default.timeline({
+        var tl = _gsap.default.timeline({
           repeat: 3
         });
         tl.add("start");
@@ -6058,7 +6054,7 @@ function loadingAni() {
           'will-change': 'opacity, transform',
           opacity: 0,
           y: function y(position, _, arr) {
-            return -40 * Math.abs(position - arr.length / 2);
+            return -60 * Math.abs(position - arr.length / 2);
           },
           z: function z() {
             return _gsap.default.utils.random(-1500, -600);
@@ -6079,28 +6075,29 @@ function loadingAni() {
           duration: 1.25
         }, "start");
         tl.to(chars, {
-          duration: 3.25,
           opacity: 0,
-          scale: 1.8,
-          'will-change': 'transform',
-          x: function x(position) {
-            var factor = position < Math.ceil(charsTotal / 2) ? position : Math.ceil(charsTotal / 2) - Math.abs(Math.floor(charsTotal / 2) - position) - 1;
-            return (charsTotal % 2 ? Math.abs(Math.ceil(charsTotal / 2) - 1 - factor) : Math.abs(Math.ceil(charsTotal / 2) - factor)) * 200 * (position < charsTotal / 2 ? -1 : 1);
-          },
-          y: function y(position) {
-            var factor = position < Math.ceil(charsTotal / 2) ? position : Math.ceil(charsTotal / 2) - Math.abs(Math.floor(charsTotal / 2) - position) - 1;
-            return factor * 60;
-          },
-          rotationY: -270,
-          rotationZ: function rotationZ(position) {
-            var factor = position < Math.ceil(charsTotal / 2) ? position : Math.ceil(charsTotal / 2) - Math.abs(Math.floor(charsTotal / 2) - position) - 1;
-            return position < charsTotal / 2 ? Math.abs(factor - charsTotal / 2) * 8 : -1 * Math.abs(factor - charsTotal / 2) * 8;
-          }
-        }, "start+=2");
-      };
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var tl;
-        _loop();
+          duration: 1.25
+        }, "start+=2.5");
+        // tl.to(chars, {
+        //     duration: 3.25,
+        //             opacity: 0,
+        //             scale: 1.8,
+        //             'will-change': 'transform', 
+        //             x: position => {
+        //                 const factor = position < Math.ceil(charsTotal/2) ? position : Math.ceil(charsTotal/2) - Math.abs(Math.floor(charsTotal/2) - position) - 1;
+        //                 return (charsTotal%2 ? Math.abs(Math.ceil(charsTotal/2)-1-factor) : Math.abs(Math.ceil(charsTotal/2)-factor) )*200*(position < charsTotal/2 ? -1 : 1);
+        //             },
+        //             y: position => {
+        //                 const factor = position < Math.ceil(charsTotal/2) ? position : Math.ceil(charsTotal/2) - Math.abs(Math.floor(charsTotal/2) - position) - 1;
+        //                 return factor*60;
+        //             },
+        //             rotationY: -270,
+        //             rotationZ: position => {
+        //                 const factor = position < Math.ceil(charsTotal/2) ? position : Math.ceil(charsTotal/2) - Math.abs(Math.floor(charsTotal/2) - position) - 1;
+        //                 return position < charsTotal/2 ? Math.abs(factor-charsTotal/2)*8 : -1*Math.abs(factor-charsTotal/2)*8;
+        //             },
+
+        //         },"start+=1.85"); 
       }
     } catch (err) {
       _iterator.e(err);
@@ -6111,4 +6108,22 @@ function loadingAni() {
 }
 loadingscreen.classList.remove('no-stuff');
 loadingAni();
-},{"splitting/dist/splitting.css":"oR66","splitting/dist/splitting-cells.css":"oR66","splitting":"Qdhu","gsap":"TpQl"}]},{},["lhjB"], null)
+
+// window.onload = setInterval((e) => {
+//     console.log("page is fully loaded");
+//     document.querySelector('body').classList.add('hideMyScroll');
+
+//     loadingscreen.classList.add('loading-screen--hide');
+//     var tl = gsap.timeline();
+//     tl.add("start")
+//     tl.to(loadingscreen, {
+//         className: "loading-scene loading-screen--hide no-ld",
+//         display: "none",
+//     },"start+=0.8")
+//   },5000);
+
+//   document.addEventListener("DOMContentLoaded", function(){
+//     document.querySelector('body').classList.remove('hideMyScroll');
+
+//   });
+},{"splitting":"Qdhu","gsap":"TpQl"}]},{},["lhjB"], null)

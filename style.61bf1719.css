@@ -62,7 +62,7 @@ body{
 	-moz-osx-font-smoothing: grayscale;
     overflow: hidden;
     overflow-y: scroll;
-   
+    
 }
  
 .inside,.inFood {
@@ -1601,9 +1601,8 @@ path.fill-green {
 
 }
 .poster-item img{
-    width: 400px;
-  
-    overflow: hidden;
+    width: 580px;
+    padding-bottom: 1.2em;
     position: absolute;
 }
 .posPoster {
@@ -1632,17 +1631,22 @@ path.fill-green {
 }
 
  /* morph svg   */
- .cartoon{
- 
+ .cartoon-2{
+    opacity: 1;
     position: fixed;
-    width: 100%;
-    height: 100%;
+    overflow: hidden;
     top: 0;
     left: 0;
-    z-index: 100;
-    background-color: #1d314f;
-    transform: translate(0, 100%);
-    
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: 50% 50%;
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    pointer-events: none;
 }
 /* .cartoon::before{
     opacity: 1;
@@ -1670,7 +1674,37 @@ path.fill-green {
 
   /* cursor */
 
-
+  .cartoon::before{
+    opacity: 1;
+    position: fixed;
+    z-index: 5001;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg);
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    flex-direction: column;
+    
+}
+.cartoon {
+    position: relative;
+    z-index: 5001;
+    pointer-events: none;
+    
+}
+#loader-svg-bg {
+    opacity: 0;
+    fill: var(--color-bg);
+}
+.svgMorph {
+    position: absolute;
+} 
  
   @media (any-pointer:fine) {
     .cursor {
@@ -1680,9 +1714,186 @@ path.fill-green {
         left: 0;
         display: block;
         pointer-events: none;
-        z-index: 5000;
+        z-index: 19;
     }
  
 
   
+}
+.content__thumb.bg__dkblue {
+    height: 400px;
+}
+.section-bg-clip {
+    height: 806.238px;
+}
+.last__footer-bg {
+    height: 286.609px;
+}
+/* orbit icon rotate button  */ 
+.items {
+    position: absolute;
+    left: 45%;
+    
+}
+#small-universe {
+ 
+    opacity: 0;
+}
+.unbutton {
+	background: none;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+}
+
+.unbutton:focus {
+	outline: none;
+}
+.item__enter{
+ 
+    align-self: center;
+    justify-self: center;
+    /* border: 1px solid #fff; */
+    display: flex;
+    grid-area: enter;
+    position: relative;
+    width: 12.5vw;
+    height: 12.5vw;
+ 
+    align-items: center;
+    justify-content: center;
+}
+.item__enter-orbit {
+    /* pointer-events: none; */
+    cursor: pointer;
+    flex: none;
+}
+.item__enter {
+	/* display: none; */
+	will-change: transform;
+}
+.item__enter-orbit {
+	fill: none;
+	will-change: transform, opacity;
+}
+.cls-1 {
+    fill: none;
+    stroke: #ffffff;
+	stroke-width: 1px;
+  }
+  .cls-2 {
+      fill: #fff;
+    }
+ 
+@media screen and (max-width: 768px)  {
+    body {
+        overflow-x: hidden;
+    }
+    .cursor {
+        display: none;
+    }
+    .content__thumb.bg__dkblue {
+        height: 260px;
+    }
+    .single__top{
+        height: 37vh;
+        width: 100%;
+        background-size: cover;
+        background-position: 50% 50%;
+    } 
+    .content__spr[data-n="4"] {
+        height: 6vh;
+    }
+    .content__editor {
+        font-size: calc(0.8rem + 0.4vw);
+    }
+
+    .content__infor {
+        width: 81.5vw;
+        margin: 0 auto;
+    }
+    .clip.serif {
+        margin-bottom: -3.16em;
+    }
+    .f-sx .o {
+        font-size: 15vw;
+    }
+    .content__editor .h2  {
+        margin: 5vh 0 2vh 0;
+    }
+    .content__spr[data-n="2"] {
+        height: 5vh;
+    }
+    .col {
+        width: 100%;
+    }
+    .float-img, .static-img {
+        width: 64.6875vw;
+        height: 82.27882vw;
+    }
+    .num__content {
+        margin-left: 0;
+        padding-right:0;
+    }
+
+  
+    .section-bg-clip {
+        height: 397.238px;
+    }
+    .last__footer-bg {
+        height: 137.609px;
+    }
+    .page-bnr {
+        height: 23vh;
+
+    }
+    .poster-item img {
+        width: 400px;
+        padding-bottom: 13.2em;
+    }
+    .illus-img .bg-img{
+        width: 30.25vw;
+        height: 30.25vw;
+    }
+    .footer-page-logo{
+        width: 33.5vw;
+    }
+    .scroll-top{
+        width: 7vh;
+    }
+    .item__enter {
+        width: 140px;
+        height: 140px;
+    }
+    .items {
+        top: 6vw;
+        left: 37vw;
+    }
+    .content__infor .content__spr[data-n="4"] {
+        height: 2vh;
+    }
+    .float-imgpv {
+        width: 82.6875vw;
+        height: 102.27882vw;
+    }
+    .num__title .title {
+        margin-top: 2.2em;
+    }
+    .b-inside {
+        overflow-x: hidden;
+    }
+    .site-header {
+        padding-left: 3vh;
+        height: 12vh;
+    }
+    .site-navi li:nth-child(1) a.current-page::before { 
+        margin-left: 3.1rem;
+    }
+    .site-navi li:nth-child(2) a.current-page::before { 
+        margin-left: 5.0rem;
+    }
+    .site-navi li:nth-child(3) a.current-page::before { 
+        margin-left: 2.7rem;
+    }
 }
