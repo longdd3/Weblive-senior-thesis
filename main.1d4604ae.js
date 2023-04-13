@@ -71030,7 +71030,7 @@ var dat = _interopRequireWildcard(require("dat.gui"));
 var _gsap = _interopRequireDefault(require("gsap"));
 var _core = _interopRequireDefault(require("@barba/core"));
 var _randomvl = require("./randomvl");
-var _jquery2 = _interopRequireDefault(require("jquery"));
+var _jquery = _interopRequireDefault(require("jquery"));
 var _ScrollTrigger = require("gsap/ScrollTrigger");
 var _smallgalaxy = require("./smallgalaxy");
 var _MotionPathPlugin = _interopRequireDefault(require("gsap/MotionPathPlugin"));
@@ -71131,10 +71131,21 @@ var Sketch = /*#__PURE__*/function () {
     this.addClickEvents();
     this.resize();
     this.barba();
+    this.fixLinkafter();
     this.render();
     this.setupResize();
   }
   _createClass(Sketch, [{
+    key: "fixLinkafter",
+    value: function fixLinkafter() {
+      document.addEventListener('click', function (event) {
+        if (event.target.closest('[data-barba-prevent]')) {
+          event.preventDefault();
+        }
+      });
+      this.updateHardReloadLinks();
+    }
+  }, {
     key: "addCursor",
     value: function addCursor() {
       var _this = this;
@@ -72019,6 +72030,20 @@ var Sketch = /*#__PURE__*/function () {
         duration: 0.05
       }, "start");
     }
+    /**
+    * Updates links that point to the current page
+    */
+  }, {
+    key: "updateHardReloadLinks",
+    value: function updateHardReloadLinks(url) {
+      var currentUrl = url || window.location.href;
+      Array.from(document.querySelectorAll('[data-barba-prevent]')).forEach(function (link) {
+        return link.removeAttribute('data-barba-prevent');
+      });
+      Array.from(document.querySelectorAll('a')).forEach(function (link) {
+        if (_core.default.url.clean(link.href) === _core.default.url.clean(currentUrl)) link.setAttribute('data-barba-prevent', true);
+      });
+    }
   }, {
     key: "barba",
     value: function barba() {
@@ -72029,10 +72054,14 @@ var Sketch = /*#__PURE__*/function () {
       });
       _core.default.hooks.afterLeave(function (data) {
         // Set <body> classes for "next" page
-        var nextHtml = data.next.html;
-        var response = nextHtml.replace(/(<\/?)body( .+?)?>/gi, '$1notbody$2>', nextHtml);
-        var bodyClasses = (0, _jquery.default)(response).filter('notbody').attr('class');
-        (0, _jquery.default)("body").attr("class", bodyClasses);
+        // var nextHtml = data.next.html;
+        // var response = nextHtml.replace(/(<\/?)body( .+?)?>/gi, '$1notbody$2>', nextHtml);
+        // var bodyClasses = (0, _jquery.default)(response).filter('notbody').attr('class');
+        // (0, _jquery.default)("body").attr("class", bodyClasses);
+      });
+      _core.default.hooks.beforeEnter(function (data) {
+        // Also update menu here
+        that.updateHardReloadLinks(data.next.href);
       });
       _core.default.hooks.afterEnter(function () {
         that.asscroll.currentPos = 0;
